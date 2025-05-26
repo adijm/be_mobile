@@ -9,4 +9,10 @@ class Category extends Model
 {
     use HasFactory;
     protected $guarded = [];
+
+    public function category()
+    {
+        return $this->hasMany(buku::class);
+    }
 }
+

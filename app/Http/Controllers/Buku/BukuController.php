@@ -160,4 +160,39 @@ class BukuController extends Controller
             'message' => 'Book deleted successfully'
         ]);
     }
+
+    //ambil buku terbaru
+    public function bukuTerbaru() {
+        $buku = Buku::orderBy('created_at','asc')->take(4)->get();
+
+        $buku->transform(function ($buku) {
+            $buku->cover = $buku->cover_image;
+            $buku->cover_url = $buku->cover_image? url('storage/buku/'.ltrim($buku->cover_image,'/')):null;
+            return $buku;
+        });
+
+        return response()->json([
+            'status'=>'success',
+            'data'=> $buku
+        ]);
+    }
+
+    // untuk pencarian
+    public function search(Request $request) {
+        $query = $request->input('query'); //untuk membuat variabel query(inputan user)
+
+        $buku = Buku::where('title', 'like', "%{$query}%")->orWhere('author', 'like', "%{$query}%")->orWhere('isbn','like',"%{$query}%")->with('category')->paginate(10); //paginate (untuk menampilkan maksimal 10)
+        $buku->getCollection()->transform(function ($buku) {
+            $buku->cover = $buku->cover_image;
+            $buku->cover_url = $buku->cover_image? url('storage/buku/'.ltrim($buku->cover_image,'/')):null;
+            return $buku;
+        });
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $buku
+            ]);
+    }
+
+    
 }

@@ -33,4 +33,6 @@ Route::post('/register', [AuthenticationController::class, 'register']);
 Route::post('/login', [AuthenticationController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('buku', BukuController::class);
+    Route::get('/buku-terbaru', [BukuController::class, 'bukuTerbaru']);
+    Route::post('/search', [BukuController::class, 'search']);
 });
