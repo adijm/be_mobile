@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\Feed\FeedController;
 use App\Http\Controllers\Buku\BukuController;
+use App\Http\Controllers\StatistikController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,4 +36,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('buku', BukuController::class);
     Route::get('/buku-terbaru', [BukuController::class, 'bukuTerbaru']);
     Route::post('/search', [BukuController::class, 'search']);
+    Route::get('/statistik', [StatistikController::class, 'statistik']);
 });
