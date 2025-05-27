@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\buku;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
@@ -18,7 +19,7 @@ class KategoriController extends Controller
         return response()->json([
             'status' => 'success',
             'data' => $kategori
-            
+
         ], 200);
     }
 
@@ -53,4 +54,24 @@ class KategoriController extends Controller
     {
         //
     }
+
+    public function BukuKategori($kategori)
+    {
+        $buku = buku::where('category_id', $kategori)
+                    ->with('category')
+                    ->paginate(10);
+
+        $buku->getCollection()->transform(function ($book) {
+            $book->cover = $book->cover_image;
+            $book->cover_url = $book->cover_image
+                ? url('storage/books/' . ltrim($book->cover_image, '/'))
+                : null;
+            return $book;
+        });
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $buku
+        ]);
+    } 
 }

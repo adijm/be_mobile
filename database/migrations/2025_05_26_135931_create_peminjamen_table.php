@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('peminjaman', function (Blueprint $table) {
             $table->id();
             $table->foreignId('buku_id')->constrained('bukus')->onDelete('cascade');
-            $table->date('tanggal_pengembalian');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('staff_id')->nullable()->constrained('users')->onDelete('set null');
+            $table->date('tanggal_peminjaman');
             $table->date('tenggat_waktu');
             $table->integer('jumlah');
             $table->string('noted')->nullable();
@@ -37,7 +39,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('peminjamen');
+        Schema::dropIfExists('peminjaman');
 
     }
 };

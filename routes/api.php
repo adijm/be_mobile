@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\Feed\FeedController;
 use App\Http\Controllers\Buku\BukuController;
 use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\StatistikController;
 
 /*
@@ -42,5 +43,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/statistik', [StatistikController::class, 'statistik']);
 
     Route::apiResource('/kategori', KategoriController::class); 
+    Route::get('/BukuKategori/{kategori}', [kategoriController::class, 'BukuKategori']);
+
+    Route::post('/pinjamBuku', [PeminjamanController::class, 'pinjamBuku']);
     
 });
