@@ -10,7 +10,21 @@ class Peminjaman extends Model
     use HasFactory;
     protected $guarded = [];
     protected $table = 'peminjaman';
-    public function book()
+
+    protected $fillable = [
+        'buku_id',
+        'user_id',
+        'staff_id',
+        'tanggal_peminjaman',
+        'tenggat_waktu',
+        'jumlah',
+        'noted',
+        'status',
+        'tanggal_dikembalikan',
+        'selesai',
+    ];
+
+    public function buku()
     {
         return $this->belongsTo(Buku::class, 'buku_id');
     }

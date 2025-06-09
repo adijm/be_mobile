@@ -14,4 +14,17 @@ class buku extends Model
         return $this->belongsTo(Category::class);
         
     }
+
+
+    protected $fillable = [
+        'title',
+        'author',
+        'publisher',
+        'isbn',
+        'publication_year',
+        'stock',
+        'description',
+        'category_id',
+        'cover_image', 
+    ];
 }
