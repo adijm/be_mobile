@@ -36,7 +36,15 @@
                         @method('DELETE')
                         <button class="btn btn-sm btn-danger">Hapus</button>
                     </form>
+                    <!-- Tombol Setujui, hanya jika status menunggu -->
+    @if($pinjam->status == 'pending')
+    <form action="{{ route('peminjaman.acc', $pinjam->id) }}" method="POST" style="display:inline-block;">
+        @csrf
+    <button class="btn btn-sm btn-success">Setujui</button>
+    </form>
+@endif
                 </td>
+                
             </tr>
             @endforeach
         </tbody>

@@ -84,4 +84,39 @@ class PeminjamanController extends Controller
 
         return redirect()->route('peminjaman.index')->with('success', 'Peminjaman berhasil dihapus.');
     }
+
+    public function acc($id)
+{
+    $peminjaman = Peminjaman::findOrFail($id);
+    $peminjaman->status = 'dipinjam';
+    $peminjaman->save();
+
+    return redirect()->back()->with('success', 'Peminjaman berhasil disetujui.');
+}    
+
+public function kembalikan($id)
+{
+    $peminjaman = Peminjaman::findOrFail($id);
+    $peminjaman->tanggal_dikembalikan = now();
+
+    // Hitung denda jika terlambat
+    $today = now()->format('Y-m-d');
+    $tenggat = $peminjaman->tenggat_waktu;
+    $denda = 0;
+
+    if ($today > $tenggat) {
+        $selisih = now()->diffInDays($tenggat);
+        $denda = $selisih * 1000; // Misalnya Rp1.000 per hari
+        $peminjaman->status = 'terlambat';
+        $peminjaman->selesai = $denda;
+    } else {
+        $peminjaman->status = 'dikembalikan';
+    }
+
+    $peminjaman->save();
+
+    return redirect()->route('pengembalian.index')->with('success', 'Buku berhasil dikembalikan');
+}
+
+
 }

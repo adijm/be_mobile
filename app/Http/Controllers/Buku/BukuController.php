@@ -18,7 +18,7 @@ class BukuController extends Controller
         $books = Buku::with('category')->paginate(10);
         $books->getCollection()->transform(function ($book) {
             $book->cover_image = $book->cover_image 
-                ? asset('storage/covers/' . $book->cover_image) 
+                ? asset('storage/cover_buku/' . $book->cover_image) 
                 : null;
             return $book;
         });
@@ -84,6 +84,7 @@ class BukuController extends Controller
     public function show(Buku $book)
     {
         $book->load('category');
+        $book->cover_url = $book->cover_image ? asset('storage/cover_buku/' . $book->cover_image) : null;
         return response()->json([
             'status' => 'success',
             'data' => $book
@@ -167,7 +168,7 @@ class BukuController extends Controller
 
         $buku->transform(function ($buku) {
             $buku->cover = $buku->cover_image;
-            $buku->cover_url = $buku->cover_image? url('storage/buku/'.ltrim($buku->cover_image,'/')):null;
+            $buku->cover_url = $buku->cover_image? url('storage/cover_buku/'.ltrim($buku->cover_image,'/')):null;
             return $buku;
         });
 
@@ -184,7 +185,7 @@ class BukuController extends Controller
         $buku = Buku::where('title', 'like', "%{$query}%")->orWhere('author', 'like', "%{$query}%")->orWhere('isbn','like',"%{$query}%")->with('category')->paginate(10); //paginate (untuk menampilkan maksimal 10)
         $buku->getCollection()->transform(function ($buku) {
             $buku->cover = $buku->cover_image;
-            $buku->cover_url = $buku->cover_image? url('storage/buku/'.ltrim($buku->cover_image,'/')):null;
+            $buku->cover_url = $buku->cover_image? url('storage/cover_buku/'.ltrim($buku->cover_image,'/')):null;
             return $buku;
         });
 

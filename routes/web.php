@@ -7,6 +7,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Web\BukuWebController;
 use App\Http\Controllers\WebKategoriController;
 use App\Http\Controllers\Web\PeminjamanController;
+use App\Http\Controllers\Web\PengembalianController;
+
 
 
 Route::get('/', function () {
@@ -31,6 +33,16 @@ Route::resource('kategori', WebKategoriController::class);
 Route::post('/logout', [WebAuthController::class, 'logout'])->name('logout');
 //peminjaman web
 Route::resource('peminjaman', PeminjamanController::class);
+
+Route::post('/peminjaman/{id}/acc', [App\Http\Controllers\Web\PeminjamanController::class, 'acc'])->name('peminjaman.acc');
+
+//pengembalian
+Route::prefix('admin')->middleware('auth')->group(function () {
+    Route::get('/pengembalian', [PengembalianController::class, 'index'])->name('pengembalian.index');
+    Route::post('/pengembalian/kembalikan/{id}', [PengembalianController::class, 'kembalikan'])->name('pengembalian.kembalikan');
+});
+
+
 });
 
 

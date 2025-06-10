@@ -74,6 +74,15 @@
     </li>
   </ul>
 </li>
+<!-- Menu Pengembalian -->
+<li class="nav-item">
+  <a href="{{ route('pengembalian.index') }}" class="nav-link {{ request()->routeIs('pengembalian.index') ? 'active' : '' }}">
+    <i class="nav-icon fas fa-undo-alt"></i>
+    <p>Pengembalian</p>
+  </a>
+</li>
+</ul>
+</li>
           </li>
         </ul>
       </nav>
