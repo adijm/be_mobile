@@ -17,15 +17,11 @@ Route::get('/login', [WebAuthController::class, 'showLoginForm'])->name('login')
 Route::post('/login', [WebAuthController::class, 'login']);
 
 Route::middleware(['auth:web', 'role:admin'])->group(function () {
-    Route::get('/admin/dashboard', function() {
+    Route::get('/dashboard', function() {
         return view('admin.dashboard');
     })->name('admin.dashboard');
     Route::resource('/buku', BukuWebController::class);
-
-});
-
-
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 Route::resource('/buku', BukuWebController::class);
 Route::get('/buku/create', [BukuWebController::class, 'create'])->name('buku.create');
 
@@ -35,4 +31,8 @@ Route::resource('kategori', WebKategoriController::class);
 Route::post('/logout', [WebAuthController::class, 'logout'])->name('logout');
 //peminjaman web
 Route::resource('peminjaman', PeminjamanController::class);
+});
+
+
+
 
