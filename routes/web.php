@@ -43,6 +43,11 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 });
 
 
+//user
+Route::get('/users', function () {
+    return view('admin.users.index'); // Buat folder dan file ini
+})->name('users.index');
+
 });
 
 
