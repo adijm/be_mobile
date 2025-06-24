@@ -23,7 +23,6 @@
       border-top: none;
     }
 
-    /* Tambahan gaya untuk efek bulat */
     body::before, body::after {
       content: "";
       position: fixed;
@@ -48,7 +47,7 @@
       right: -100px;
     }
 
-    /* Sidebar ubah warna */
+    /* Sidebar */
     .main-sidebar {
       background: linear-gradient(to bottom right, #d1eaff, #cce0ff);
     }
@@ -56,7 +55,7 @@
     .main-sidebar .brand-link,
     .main-sidebar .nav-link,
     .main-sidebar .nav-header {
-      color: #003366;
+      color: #000 !important; /* Ubah semua teks sidebar jadi hitam */
     }
 
     .main-sidebar .nav-link.active {
