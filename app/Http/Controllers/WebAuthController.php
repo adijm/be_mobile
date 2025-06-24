@@ -7,42 +7,40 @@ use Illuminate\Support\Facades\Auth;
 
 class WebAuthController extends Controller
 {
+    // Tampilkan form login
     public function showLoginForm()
     {
-        return view('auth.login');  // blade view login
+        return view('auth.login'); // pastikan file login.blade.php ada di resources/views/
     }
 
+    // Proses login
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'username' => ['required'],
-            'password' => ['required'],
+        $credentials = $request->only('username', 'password');
+
+        // Validasi input
+        $request->validate([
+            'username' => 'required|string',
+            'password' => 'required|string',
         ]);
 
-        if (Auth::guard('web')->attempt($credentials)) {
+        // Coba login
+        if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-
-            // cek role admin misal
-            if (Auth::user()->role === 'admin') {
-                return redirect()->intended('/admin/dashboard');
-            }
-
-            // jika bukan admin bisa redirect ke halaman lain atau logout
-            Auth::logout();
-            return redirect('/login')->withErrors('Unauthorized role');
+            return redirect()->route('dashboard'); // ke dashboard setelah login
         }
 
         return back()->withErrors([
-            'username' => 'Login gagal, periksa username dan password.',
+            'message' => 'Username atau password salah.',
         ]);
     }
 
+    // Proses logout
     public function logout(Request $request)
     {
-        Auth::guard('web')->logout();
+        Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-
-        return redirect('/login');
+        return redirect()->route('login');
     }
 }
