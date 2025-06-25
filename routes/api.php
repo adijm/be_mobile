@@ -20,17 +20,17 @@ use App\Http\Controllers\StatistikController;
 |
 */
 
-Route::get('/feeds', [FeedController::class, 'index'])->middleware('auth:sanctum');
-Route::post('/feed/store', [FeedController::class, 'store'])->middleware('auth:sanctum');
-Route::post('/feed/like/{feed_id}', [FeedController::class, 'likePost'])->middleware('auth:sanctum');
-Route::post('/feed/comment/{feed_id}', [FeedController::class, 'comment'])->middleware('auth:sanctum');
-Route::get('/feed/comments/{feed_id}', [FeedController::class, 'getComments'])->middleware('auth:sanctum');
+// Route::get('/feeds', [FeedController::class, 'index'])->middleware('auth:sanctum');
+// Route::post('/feed/store', [FeedController::class, 'store'])->middleware('auth:sanctum');
+// Route::post('/feed/like/{feed_id}', [FeedController::class, 'likePost'])->middleware('auth:sanctum');
+// Route::post('/feed/comment/{feed_id}', [FeedController::class, 'comment'])->middleware('auth:sanctum');
+// Route::get('/feed/comments/{feed_id}', [FeedController::class, 'getComments'])->middleware('auth:sanctum');
 
-Route::get('/test', function () {
-    return response([
-        'message' => 'Api is working'
-    ], 200);
-});
+// Route::get('/test', function () {
+//     return response([
+//         'message' => 'Api is working'
+//     ], 200);
+// });
 
 Route::post('/register', [AuthenticationController::class, 'register']);
 Route::post('/login', [AuthenticationController::class, 'login'])->name('login');
