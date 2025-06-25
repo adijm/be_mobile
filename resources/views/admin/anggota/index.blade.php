@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title', 'Daftar Buku')
+@section('title', 'Daftar Anggota')
 
 @section('content')
 <style>
@@ -108,13 +108,13 @@
 </style>
 
 <div class="container">
-    <h1 class="page-title mb-4">📚 Daftar Buku</h1>
+    <h1 class="page-title mb-4">👤 Daftar Anggota</h1>
 
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <a href="{{ route('buku.create') }}" class="btn btn-primary">+ Tambah Buku</a>
+        <a href="{{ route('anggota.create') }}" class="btn btn-primary">+ Tambah Anggota</a>
 
-        <form action="{{ route('buku.index') }}" method="GET" class="search-bar">
-            <input type="text" name="search" placeholder="Cari buku..." value="{{ request('search') }}">
+        <form action="{{ route('anggota.index') }}" method="GET" class="search-bar">
+            <input type="text" name="search" placeholder="Cari anggota..." value="{{ request('search') }}">
         </form>
     </div>
 
@@ -122,51 +122,25 @@
         <table class="custom-table">
             <thead>
                 <tr>
-                    <th>Judul</th>
-                    <th>Penulis</th>
-                    <th>ISBN</th>
-                    <th>Penerbit</th>
-                    <th>Tahun</th>
-                    <th>Stok</th>
-                    <th>Kategori</th>
-                    <th>Deskripsi</th>
-                    <th>Cover</th>
+                    <th>Nama</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Tanggal Daftar</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($bukus as $buku)
+                @foreach ($anggota as $item)
                     <tr>
-                        <td>{{ $buku->title }}</td>
-                        <td>{{ $buku->author }}</td>
-                        <td>{{ $buku->isbn }}</td>
-                        <td>{{ $buku->publisher }}</td>
-                        <td>{{ $buku->publication_year }}</td>
+                        <td>{{ $item->name }}</td>
+                        <td>{{ $item->username }}</td>
+                        <td>{{ $item->email }}</td>
+                        <td>{{ $item->created_at->format('d-m-Y') }}</td>
                         <td>
-                            <span class="badge 
-                                {{ $buku->stock > 5 ? 'badge-available' : ($buku->stock > 0 ? 'badge-limited' : 'badge-empty') }}">
-                                {{ $buku->stock }}
-                            </span>
-                        </td>
-                        <td>{{ $buku->category->name ?? '-' }}</td>
-                        <td>{{ $buku->description }}</td>
-                        <td>
-                            @if ($buku->cover_image)
-                            <img src="{{ asset('storage/' . $buku->cover_image) }}" alt="Cover" class="cover-img">
-
-
-                            @endif
-                        </td>
-                        <td>
-                            <a href="{{ route('buku.edit', $buku->id) }}" class="btn-icon" title="Edit">
-                                <i class="fas fa-pen"></i>
-                            </a>
-                            <form action="{{ route('buku.destroy', $buku->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn-icon" title="Hapus">
-                                    <i class="fas fa-trash"></i>
-                                </button>
+                            <a href="#" class="btn-icon" title="Edit"><i class="fas fa-pen"></i></a>
+                            <form action="#" method="POST" style="display:inline;">
+                                @csrf @method('DELETE')
+                                <button class="btn-icon" title="Hapus"><i class="fas fa-trash"></i></button>
                             </form>
                         </td>
                     </tr>

@@ -45,6 +45,24 @@
                         <p>Pengembalian</p>
                     </a>
                 </li>
+                
+                <li class="nav-header">MEMBER</li>
+
+                <li class="nav-item">
+                    <a href="{{ route('anggota.index') }}" class="nav-link {{ request()->is('anggota*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-user"></i>
+                        <p>Anggota</p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('petugas.index') }}" class="nav-link {{ request()->is('petugas*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-user-shield"></i>
+                        <p>Petugas</p>
+                    </a>
+                </li>
+
+                
 
             </ul>
         </nav>

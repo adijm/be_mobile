@@ -10,11 +10,24 @@ use Illuminate\Http\Request;
 
 class BukuWebController extends Controller
 {
-    public function index()
-    {
-        $bukus = Buku::with('category')->get(); // relasi ke kategori jika ada
-        return view('admin.buku.index', compact('bukus'));
+    public function index(Request $request)
+{
+    $query = Buku::with('category');
+
+    if ($request->has('search') && $request->search != '') {
+        $search = $request->search;
+        $query->where(function ($q) use ($search) {
+            $q->where('title', 'like', '%' . $search . '%')
+              ->orWhere('author', 'like', '%' . $search . '%')
+              ->orWhere('isbn', 'like', '%' . $search . '%')
+              ->orWhere('publisher', 'like', '%' . $search . '%');
+        });
     }
+
+    $bukus = $query->get();
+
+    return view('admin.buku.index', compact('bukus'));
+}
 
     public function create()
     {
@@ -106,5 +119,5 @@ class BukuWebController extends Controller
         $buku->save();
 
         return redirect()->route('buku.index')->with('success', 'Buku berhasil diperbarui');
-    }
+    } 
 }
