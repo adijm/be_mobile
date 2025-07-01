@@ -1,110 +1,148 @@
 @extends('layouts.master')
 
+@section('title', 'List Kategori')
+
 @section('content')
 <style>
-    .table-custom {
-        width: 100%;
-        border-collapse: separate;
-        border-spacing: 0;
-        background-color: #ffffff;
-        border-radius: 10px;
-        overflow: hidden;
-        box-shadow: 0 4px 20px rgba(0, 123, 255, 0.1);
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    .table-custom thead {
-        background: linear-gradient(to right, #cce9ff, #e6f3ff);
-        font-weight: bold;
-        color: #003366;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .table-custom th,
-    .table-custom td {
-        padding: 16px 20px;
-        border-bottom: 1px solid #e0f0ff;
-        text-align: left;
-        font-size: 14px;
-        vertical-align: middle;
-    }
-
-    .table-custom tbody tr:hover {
-        background-color: #f2faff;
-        transition: background 0.3s ease;
+    .container {
+        background: #ffffff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        margin-top: 20px;
     }
 
     .page-title {
-        font-size: 28px;
+        font-size: 24px;
         font-weight: 600;
         color: #003366;
-        margin-bottom: 25px;
+        margin-bottom: 20px;
         display: flex;
         align-items: center;
         gap: 10px;
     }
 
-    .page-title i {
-        color: #3399ff;
-    }
-
-    .btn-primary {
-        background: #3399ff;
-        border: none;
-        padding: 10px 18px;
-        font-weight: 500;
-        font-size: 14px;
+    .btn-add {
+        background-color: #3399ff;
+        color: white;
+        padding: 8px 16px;
         border-radius: 6px;
-        box-shadow: 0 2px 6px rgba(0, 123, 255, 0.3);
-    }
-
-    .btn-primary:hover {
-        background: #007bff;
-    }
-
-    .container {
-        background: rgba(255, 255, 255, 0.8);
-        padding: 30px;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    }
-
-    .table-number {
-        font-weight: bold;
-        color: #3399ff;
-    }
-
-    .category-name {
+        font-size: 14px;
         font-weight: 500;
+        box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
+        margin-bottom: 20px;
+        text-decoration: none;
+    }
+
+    .btn-add:hover {
+        background-color: #007bff;
+    }
+
+    .table-wrapper {
+        overflow-x: auto;
+    }
+
+    .table-custom {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #f9fcff;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .table-custom thead {
+        background-color: #d8ecff;
+        color: #003366;
+    }
+
+    .table-custom th, .table-custom td {
+        padding: 14px 16px;
+        text-align: left;
+        font-size: 14px;
+    }
+
+    .table-custom th {
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+
+    .table-custom tbody tr:hover {
+        background-color: #eef7ff;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 8px;
+    }
+
+    .btn-edit {
+        background-color: #facc15;
+        border: none;
+        color: #000;
+        padding: 6px 12px;
+        font-size: 13px;
+        border-radius: 4px;
+    }
+
+    .btn-delete {
+        background-color: #ef4444;
+        border: none;
+        color: white;
+        padding: 6px 12px;
+        font-size: 13px;
+        border-radius: 4px;
+    }
+
+    .btn-edit:hover {
+        background-color:rgb(248, 212, 103);
+    }
+
+    .btn-delete:hover {
+        background-color:rgb(230, 128, 128);
     }
 </style>
 
 <div class="container">
     <h1 class="page-title"><i class="fas fa-book"></i> List Kategori</h1>
 
-    <a href="{{ route('kategori.create') }}" class="btn btn-primary mb-3">
+    <a href="{{ route('kategori.create') }}" class="btn-add">
         <i class="fas fa-plus-circle"></i> Tambah Kategori
     </a>
 
-    <table class="table-custom">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Nama Kategori</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($kategoris as $index => $kategori)
+    <div class="table-wrapper">
+        <table class="table-custom">
+            <thead>
                 <tr>
-                    <td class="table-number">{{ $index + 1 }}</td>
-                    <td class="category-name">{{ $kategori->name }}</td>
+                    <th style="width: 50px;">No</th>
+                    <th>Nama Kategori</th>
+                    <th style="width: 140px;">Aksi</th>
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @forelse ($kategoris as $index => $kategori)
+                    <tr>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $kategori->name }}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="{{ route('kategori.edit', $kategori->id) }}" class="btn-edit">Edit</a>
+                                <form action="{{ route('kategori.destroy', $kategori->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus kategori ini?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn-delete">Hapus</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="3" class="text-center">Belum ada kategori.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
 </div>
 
-<!-- Tambahkan CDN Font Awesome untuk ikon jika belum ada -->
 <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 @endsection

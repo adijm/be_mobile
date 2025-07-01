@@ -5,33 +5,35 @@
 @section('content')
 <style>
     .table-container {
-        background-color: #ffffff;
+        background-color: rgba(227, 244, 250, 0.7);
         border-radius: 16px;
         padding: 20px;
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
         overflow-x: auto;
+        overflow-y: scroll;
+        max-height: 550px;
     }
 
     .custom-table {
         width: 100%;
         border-collapse: separate;
         border-spacing: 0 12px;
-        min-width: 1500px;
+        min-width: 1200px;
     }
 
     .custom-table thead th {
-        background-color: #f1f5f9;
-        padding: 12px 16px;
-        text-align: left;
+        background-color: rgb(176, 210, 244);
+        padding: 12px;
+        text-align: center;
         font-weight: bold;
-        font-size: 14px;
-        color: #003366;
+        font-size: 15px;
+        color: rgb(9, 99, 189);
     }
 
     .custom-table tbody tr {
-        background: #f9fcff;
+        background-color: rgb(248, 251, 255);
         border-radius: 10px;
-        box-shadow: 0 2px 8px rgba(0, 123, 255, 0.08);
+        box-shadow: 0 2px 6px rgba(0, 123, 255, 0.1);
     }
 
     .custom-table tbody td {
@@ -39,11 +41,15 @@
         font-size: 14px;
         color: #333;
         vertical-align: middle;
+        max-width: 200px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .custom-table tbody tr:hover {
-        background-color: #eaf6ff;
-        transition: 0.3s;
+        background-color:rgb(134, 198, 247);
+        transition: 0.2s;
     }
 
     .badge {
@@ -51,7 +57,7 @@
         border-radius: 20px;
         font-size: 12px;
         color: white;
-        font-weight: 500;
+        font-weight: 600;
     }
 
     .badge-available {
@@ -69,18 +75,30 @@
     .cover-img {
         width: 50px;
         height: auto;
-        border-radius: 5px;
+        border-radius: 6px;
     }
 
     .btn-icon {
-        background: none;
+        background-color: transparent;
         border: none;
         font-size: 16px;
-        color: #003366;
+        margin: 0 5px;
     }
 
-    .btn-icon:hover {
-        color: #007bff;
+    .btn-edit {
+        color: #fbbf24;
+    }
+
+    .btn-edit:hover {
+        color: #f59e0b;
+    }
+
+    .btn-delete {
+        color: #ef4444;
+    }
+
+    .btn-delete:hover {
+        color: #dc2626;
     }
 
     .search-bar {
@@ -135,7 +153,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($bukus as $buku)
+                @forelse ($bukus as $buku)
                     <tr>
                         <td>{{ $buku->title }}</td>
                         <td>{{ $buku->author }}</td>
@@ -157,20 +175,24 @@
 
                             @endif
                         </td>
-                        <td>
-                            <a href="{{ route('buku.edit', $buku->id) }}" class="btn-icon" title="Edit">
+                        <td class="text-center">
+                            <a href="{{ route('buku.edit', $buku->id) }}" class="btn-icon btn-edit" title="Edit">
                                 <i class="fas fa-pen"></i>
                             </a>
-                            <form action="{{ route('buku.destroy', $buku->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus?');">
+                            <form action="{{ route('buku.destroy', $buku->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus?');">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn-icon" title="Hapus">
+                                <button type="submit" class="btn-icon btn-delete" title="Hapus">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </form>
                         </td>
                     </tr>
-                @endforeach
+                @empty
+                    <tr>
+                        <td colspan="10" class="text-center">Belum ada data buku.</td>
+                    </tr>
+                @endforelse
             </tbody>
         </table>
     </div>
