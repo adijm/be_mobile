@@ -1,3 +1,20 @@
+<style>
+    .main-sidebar {
+        display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    }
+
+    .main-sidebar .nav-sidebar {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .main-sidebar .nav-item.mt-auto {
+        margin-top: auto !important;
+    }
+</style>
 <aside class="main-sidebar sidebar-light-primary elevation-4" style="background: linear-gradient(to bottom, #d1eaff, #ffffff);">
     <!-- Brand Logo -->
     <a href="{{ url('/') }}" class="brand-link text-center">
@@ -62,11 +79,21 @@
                     </a>
                 </li>
 
+          
                 
 
             </ul>
         </nav>
         <!-- /.sidebar-menu -->
+           <!-- Tombol Logout -->
+          <div class="mt-auto p-3">
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="btn btn-danger w-100">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </form>
+        </div>   
     </div>
     <!-- /.sidebar -->
 </aside>
