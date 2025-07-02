@@ -29,7 +29,7 @@ Route::middleware(['auth:web', 'role:admin'])->group(function () {
     Route::resource('/buku', BukuWebController::class);
     
     // Kategori
-    Route::resource('kategori', WebKategoriController::class);
+    Route::resource('/kategori', WebKategoriController::class);
 
     // Peminjaman
     Route::resource('peminjaman', PeminjamanController::class);

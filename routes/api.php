@@ -43,7 +43,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/statistik', [StatistikController::class, 'statistik']);
 
     Route::apiResource('/kategori', KategoriController::class); 
-    Route::get('/BukuKategori/{kategori}', [kategoriController::class, 'BukuKategori']);
+    Route::get('/BukuKategori/{kategori}', [KategoriController::class, 'BukuKategori']);
 
     Route::post('/pinjamBuku', [PeminjamanController::class, 'pinjamBuku']);
     
