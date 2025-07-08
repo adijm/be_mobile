@@ -65,7 +65,7 @@ class BukuController extends Controller
         if ($request->hasFile('cover_image')) {
             $image = $request->file('cover_image');
             $filename = time() . '.' . $image->getClientOriginalExtension();
-            $path = $image->storeAs('public/covers', $filename);
+            $path = $image->storeAs('public/cover_buku', $filename);
             $book->cover_image = $filename;
         }
 
@@ -127,11 +127,11 @@ class BukuController extends Controller
         if ($request->hasFile('cover_image')) {
             // Delete old image if exists
             if ($book->cover_image) {
-                Storage::delete('public/covers/' . $book->cover_image);
+                Storage::delete('public/cover_buku/' . $book->cover_image);
             }
             $image = $request->file('cover_image');
             $filename = time() . '.' . $image->getClientOriginalExtension();
-            $path = $image->storeAs('public/covers', $filename);
+            $path = $image->storeAs('public/cover_buku', $filename);
             $book->cover_image = $filename;
         }
 
@@ -151,7 +151,7 @@ class BukuController extends Controller
     {
         // Delete cover image if exists
         if ($book->cover_image) {
-            Storage::delete('public/covers/' . $book->cover_image);
+            Storage::delete('public/cover_buku/' . $book->cover_image);
         }
         
         $book->delete();
