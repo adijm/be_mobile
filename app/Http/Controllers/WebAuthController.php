@@ -9,7 +9,7 @@ class WebAuthController extends Controller
 {
     private $adminCredentials = [
         'username' => 'admin123',
-        'password' => 'adminpassword' // ubah sesuai keinginan
+        'password' => '0000'
     ];
 
     public function showLoginForm()
