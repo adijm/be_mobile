@@ -3,44 +3,41 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class WebAuthController extends Controller
 {
-    // Tampilkan form login
+    private $adminCredentials = [
+        'username' => 'admin123',
+        'password' => '0000'
+    ];
+
     public function showLoginForm()
     {
-        return view('auth.login'); // pastikan file login.blade.php ada di resources/views/
+        return view('auth.login');
     }
 
-    // Proses login
     public function login(Request $request)
     {
-        $credentials = $request->only('username', 'password');
-
-        // Validasi input
         $request->validate([
-            'username' => 'required|string',
-            'password' => 'required|string',
+            'username' => 'required',
+            'password' => 'required',
         ]);
 
-        // Coba login
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-            return redirect()->route('dashboard'); // ke dashboard setelah login
+        if (
+            $request->username === $this->adminCredentials['username'] &&
+            $request->password === $this->adminCredentials['password']
+        ) {
+            Session::put('is_admin', true);
+            return redirect()->route('dashboard');
         }
 
-        return back()->withErrors([
-            'message' => 'Username atau password salah.',
-        ]);
+        return back()->with('error', 'Username atau Password salah.');
     }
 
-    // Proses logout
-    public function logout(Request $request)
+    public function logout()
     {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        Session::forget('is_admin');
         return redirect()->route('login');
     }
 }
