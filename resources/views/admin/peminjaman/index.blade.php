@@ -5,8 +5,8 @@
 @section('content')
 <style>
     :root {
-        --sidebar-bg:rgb(95, 160, 224);
-        --sidebar-hover:rgb(29, 142, 255);
+        --sidebar-bg:rgb(211, 238, 243);
+        --sidebar-hover:rgb(250, 252, 255);
         --sidebar-text: #ecf0f1;
     }
     
