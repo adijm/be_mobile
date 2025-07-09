@@ -17,18 +17,18 @@ Route::post('/login', [AuthenticationController::class, 'login'])->name('login')
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('buku', BukuController::class);
     Route::get('/buku-terbaru', [BukuController::class, 'bukuTerbaru']);
-    Route::get('/search', [BukuController::class, 'search']);
-
-    Route::get('/statistik', [StatistikController::class, 'statistik']);
-
+    
     Route::apiResource('/kategori', KategoriController::class); 
     Route::get('/BukuKategori/{kategori}', [KategoriController::class, 'BukuKategori']);
-
+    
     Route::post('/pinjamBuku', [PeminjamanController::class, 'pinjamBuku']);
     Route::get('/peminjaman', [PeminjamanController::class, 'getUserPeminjaman']);
     
     Route::get('/pengembalian', [PengembalianApiController::class, 'index']);
     Route::post('/pengembalian/kembalikan/{id}', [PengembalianApiController::class, 'kembalikan']);
     Route::get('/histori/{userId}', [PengembalianApiController::class, 'historiUser']);
-
+    
 });
+Route::post('/search', [BukuController::class, 'search']);
+
+Route::get('/statistik', [StatistikController::class, 'statistik']);
