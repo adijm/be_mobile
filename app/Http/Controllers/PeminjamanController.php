@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class PeminjamanController extends Controller
 {
@@ -114,23 +115,73 @@ class PeminjamanController extends Controller
         $randomStaff = User::whereIn('role', ['admin', 'karyawan'])->inRandomOrder()->first();
 
         $now = Carbon::now();
-        $loan = Peminjaman::create([
-            'buku_id' => $request->buku_id,
-            'user_id' => $user->id, 
-            'tanggal_peminjaman' => $now,
-            'tenggat_waktu' => $request->tenggat_waktu,
-            'jumlah' => 1,
-            'status' => 'pending',
-            'staff_id' => $randomStaff ? $randomStaff->id : null
-        ]);
+        $tenggatWaktu = $now->copy()->addDays(7);
+
+$loan = Peminjaman::create([
+    'buku_id' => $request->buku_id,
+    'user_id' => $user->id, 
+    'tanggal_peminjaman' => $now,
+    'tenggat_waktu' => $tenggatWaktu,
+    'jumlah' => 1,
+    'status' => 'pending',
+    'staff_id' => $randomStaff ? $randomStaff->id : null
+]);
 
         $book->decrement('stock');
 
         return response()->json([
             'status' => 'success',
             'message' => 'Book loan request created successfully',
-            'data' => $loan->load(['book', 'staff'])
+            'data' => $loan->load(['buku', 'staff','user'])
         ], 201);
 
         }
+
+        public function kembalikanBuku($id)
+{
+    $peminjaman = Peminjaman::find($id);
+
+    if (!$peminjaman) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Data peminjaman tidak ditemukan'
+        ], 404);
+    }
+
+    if ($peminjaman->status === 'dikembalikan') {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Buku sudah dikembalikan sebelumnya'
+        ], 400);
+    }
+
+    $peminjaman->update([
+        'status' => 'dikembalikan',
+        'tanggal_dikembalikan' => now(),
+    ]);
+
+    // Tambahkan stok buku kembali
+    $peminjaman->buku->increment('stock');
+
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Buku berhasil dikembalikan'
+    ], 200);
+}
+public function getUserPeminjaman()
+{
+    $user = Auth::user();
+
+    $peminjaman = Peminjaman::with(['buku', 'user', 'staff'])
+        ->where('user_id', $user->id)
+        ->latest()
+        ->get();
+
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Data peminjaman berhasil diambil',
+        'data' => $peminjaman
+    ]);
+}
+
 }

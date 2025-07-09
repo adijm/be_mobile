@@ -8,9 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Peminjaman extends Model
 {
     use HasFactory;
-    protected $guarded = [];
+
     protected $table = 'peminjaman';
 
+    // Biarkan hanya fillable agar bisa digunakan saat create/update data
     protected $fillable = [
         'buku_id',
         'user_id',
@@ -24,17 +25,25 @@ class Peminjaman extends Model
         'selesai',
     ];
 
+    /**
+     * Relasi ke model Buku (buku yang dipinjam)
+     */
     public function buku()
     {
         return $this->belongsTo(Buku::class, 'buku_id');
     }
-    
 
+    /**
+     * Relasi ke model User (anggota yang meminjam)
+     */
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
+    /**
+     * Relasi ke model User (petugas/staff yang mengelola)
+     */
     public function staff()
     {
         return $this->belongsTo(User::class, 'staff_id');

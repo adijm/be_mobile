@@ -46,5 +46,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/BukuKategori/{kategori}', [KategoriController::class, 'BukuKategori']);
 
     Route::post('/pinjamBuku', [PeminjamanController::class, 'pinjamBuku']);
-    
+    Route::get('/peminjaman', [PeminjamanController::class, 'getUserPeminjaman']);
 });
