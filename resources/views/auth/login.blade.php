@@ -288,9 +288,9 @@
     </div>
     
     <div class="form-side">
-        <div class="logo">
+        <!-- <div class="logo">
             <img src="https://via.placeholder.com/150x50?text=Perpustakaan" alt="Logo Perpustakaan">
-        </div>
+        </div> -->
         
         <div class="welcome-text">
             <h2>Selamat Datang Kembali</h2>
@@ -312,9 +312,9 @@
                 <i class="fas fa-lock input-icon"></i>
             </div>
             
-            <div class="forgot-pass">
+            <!-- <div class="forgot-pass">
                 <a href="#">Lupa password?</a>
-            </div>
+            </div> -->
             
             <button type="submit" class="btn-login">
                 <span class="mr-2">Masuk</span>
