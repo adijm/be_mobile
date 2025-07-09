@@ -16,17 +16,20 @@ class BukuController extends Controller
     public function index()
     {
         $books = Buku::with('category')->paginate(10);
+    
         $books->getCollection()->transform(function ($book) {
-            $book->cover_image = $book->cover_image 
-                ? asset('storage/cover_buku/' . $book->cover_image) 
+            $book->cover = $book->cover_image;
+            $book->cover_url = $book->cover_image 
+                ? url('storage/' . ltrim($book->cover_image, '/')) 
                 : null;
             return $book;
         });
+    
         return response()->json([
             'status' => 'success',
             'data' => $books
         ]);
-    }
+    }    
 
     /**
      * Store a newly created resource in storage.
@@ -84,7 +87,7 @@ class BukuController extends Controller
     public function show(Buku $book)
     {
         $book->load('category');
-        $book->cover_url = $book->cover_image ? asset('storage/cover_buku/' . $book->cover_image) : null;
+        $book->cover_url = $book->cover_image ? url('storage/' . $book->cover_image, '/') : null;
         return response()->json([
             'status' => 'success',
             'data' => $book
@@ -168,7 +171,7 @@ class BukuController extends Controller
 
         $buku->transform(function ($buku) {
             $buku->cover = $buku->cover_image;
-            $buku->cover_url = $buku->cover_image? url('storage/cover_buku/'.ltrim($buku->cover_image,'/')):null;
+            $buku->cover_url = $buku->cover_image? url('storage/'.ltrim($buku->cover_image,'/')):null;
             return $buku;
         });
 
@@ -180,12 +183,12 @@ class BukuController extends Controller
 
     // untuk pencarian
     public function search(Request $request) {
-        $query = $request->input('query'); //untuk membuat variabel query(inputan user)
+        $query = $request->query('query'); //untuk membuat variabel query(inputan user)
 
         $buku = Buku::where('title', 'like', "%{$query}%")->orWhere('author', 'like', "%{$query}%")->orWhere('isbn','like',"%{$query}%")->with('category')->paginate(10); //paginate (untuk menampilkan maksimal 10)
         $buku->getCollection()->transform(function ($buku) {
             $buku->cover = $buku->cover_image;
-            $buku->cover_url = $buku->cover_image? url('storage/cover_buku/'.ltrim($buku->cover_image,'/')):null;
+            $buku->cover_url = $buku->cover_image? url('storage/'.ltrim($buku->cover_image,'/')):null;
             return $buku;
         });
 

@@ -13,9 +13,10 @@ class KategoriController extends Controller
      */
     public function index()
     {
+        
         //ambil data kategori
         $kategori = Category::all();
-        
+
         return response()->json([
             'status' => 'success',
             'data' => $kategori
@@ -64,7 +65,7 @@ class KategoriController extends Controller
         $buku->getCollection()->transform(function ($book) {
             $book->cover = $book->cover_image;
             $book->cover_url = $book->cover_image
-                ? url('storage/books/' . ltrim($book->cover_image, '/'))
+                ? url('storage/cover_buku/' . ltrim($book->cover_image, '/'))
                 : null;
             return $book;
         });
