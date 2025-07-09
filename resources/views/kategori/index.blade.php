@@ -4,134 +4,117 @@
 
 @section('content')
 <style>
-    .container {
-        background: #ffffff;
-        padding: 30px;
-        border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-        margin-top: 20px;
-    }
-
     .page-title {
         font-size: 24px;
         font-weight: 600;
         color: #003366;
-        margin-bottom: 20px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
     }
 
-    .btn-add {
+    .btn-primary {
         background-color: #3399ff;
+        border: none;
         color: white;
         padding: 8px 16px;
-        border-radius: 6px;
-        font-size: 14px;
+        border-radius: 8px;
         font-weight: 500;
-        box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
         text-decoration: none;
-        float: right;
-        margin-bottom: 20px;
+        box-shadow: 0 2px 6px rgba(0, 123, 255, 0.3);
     }
 
-    .btn-add:hover {
+    .btn-primary:hover {
         background-color: #007bff;
     }
 
-    .table-wrapper {
+    .table-container {
+        background-color: rgba(227, 244, 250, 0.7);
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
         overflow-x: auto;
+        max-height: 550px;
     }
 
-    .table-custom {
+    .custom-table {
         width: 100%;
-        border-collapse: collapse;
-        background-color: #f9fcff;
-        border-radius: 8px;
-        overflow: hidden;
+        border-collapse: separate;
+        border-spacing: 0 12px;
+        min-width: 800px;
     }
 
-    .table-custom thead {
-        background-color: #d8ecff;
-        color: #003366;
-    }
-
-    .table-custom th, .table-custom td {
-        padding: 14px 16px;
+    .custom-table thead th {
+        background-color: rgb(176, 210, 244);
+        padding: 12px;
         text-align: left;
-        font-size: 14px;
-    }
-
-    .table-custom th {
-        text-transform: uppercase;
         font-weight: bold;
+        font-size: 15px;
+        color: rgb(9, 99, 189);
     }
 
-    .table-custom tbody tr:hover {
-        background-color: #eef7ff;
+    .custom-table tbody tr {
+        background-color: rgb(248, 251, 255);
+        border-radius: 10px;
+        box-shadow: 0 2px 6px rgba(0, 123, 255, 0.1);
+    }
+
+    .custom-table tbody td {
+        padding: 12px 16px;
+        font-size: 14px;
+        color: #333;
+        vertical-align: middle;
+    }
+
+    .custom-table tbody tr:hover {
+        background-color: rgb(134, 198, 247);
+        transition: 0.2s;
     }
 
     .action-buttons {
         display: flex;
-        gap: 8px;
         justify-content: flex-end;
-        align-items: center;
+        gap: 8px;
     }
 
     .btn-icon {
+        background-color: transparent;
         border: none;
-        padding: 6px 10px;
-        font-size: 14px;
-        border-radius: 4px;
+        font-size: 16px;
+        margin: 0 5px;
         cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 32px;
-        height: 32px;
     }
 
     .btn-edit {
-        background-color: #facc15;
-        color: #000;
-    }
-
-    .btn-delete {
-        background-color: #ef4444;
-        color: white;
+        color: #fbbf24;
     }
 
     .btn-edit:hover {
-        background-color: rgb(248, 212, 103);
+        color: #f59e0b;
+    }
+
+    .btn-delete {
+        color: #ef4444;
     }
 
     .btn-delete:hover {
-        background-color: rgb(230, 128, 128);
-    }
-
-    .header-with-button {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
+        color: #dc2626;
     }
 </style>
 
 <div class="container">
-    <div class="header-with-button">
-        <h1 class="page-title"><i class="fas fa-book"></i> List Kategori</h1>
-        <a href="{{ route('kategori.create') }}" class="btn-add">
+    <h1 class="page-title mb-4"><i class="fas fa-book"></i> List Kategori</h1>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <a href="{{ route('kategori.create') }}" class="btn-primary">
             <i class="fas fa-plus-circle"></i> Tambah Kategori
         </a>
     </div>
 
-    <div class="table-wrapper">
-        <table class="table-custom">
+    <div class="table-container">
+        <table class="custom-table">
             <thead>
                 <tr>
-                    <th style="width: 50px;">No</th>
+                    <th style="width: 60px;">No</th>
                     <th>Nama Kategori</th>
-                    <th style="width: 120px; text-align: right;">Aksi</th>
+                    <th style="width: 120px;">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -139,10 +122,10 @@
                     <tr>
                         <td>{{ $index + 1 }}</td>
                         <td>{{ $kategori->name }}</td>
-                        <td style="white-space: nowrap;">
+                        <td>
                             <div class="action-buttons">
                                 <a href="{{ route('kategori.edit', $kategori->id) }}" class="btn-icon btn-edit" title="Edit">
-                                    <i class="fas fa-pencil-alt"></i>
+                                    <i class="fas fa-pen"></i>
                                 </a>
                                 <form action="{{ route('kategori.destroy', $kategori->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus kategori ini?');">
                                     @csrf

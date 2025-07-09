@@ -5,33 +5,35 @@
 @section('content')
 <style>
     .table-container {
-        background-color: #ffffff;
+        background-color: rgba(227, 244, 250, 0.7);
         border-radius: 16px;
         padding: 20px;
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
         overflow-x: auto;
+        overflow-y: scroll;
+        max-height: 550px;
     }
 
     .custom-table {
         width: 100%;
         border-collapse: separate;
         border-spacing: 0 12px;
-        min-width: 1500px;
+        min-width: 1000px;
     }
 
     .custom-table thead th {
-        background-color: #f1f5f9;
-        padding: 12px 16px;
-        text-align: left;
+        background-color: rgb(176, 210, 244);
+        padding: 12px;
+        text-align: center;
         font-weight: bold;
-        font-size: 14px;
-        color: #003366;
+        font-size: 15px;
+        color: rgb(9, 99, 189);
     }
 
     .custom-table tbody tr {
-        background: #f9fcff;
+        background-color: rgb(248, 251, 255);
         border-radius: 10px;
-        box-shadow: 0 2px 8px rgba(0, 123, 255, 0.08);
+        box-shadow: 0 2px 6px rgba(0, 123, 255, 0.1);
     }
 
     .custom-table tbody td {
@@ -39,60 +41,55 @@
         font-size: 14px;
         color: #333;
         vertical-align: middle;
+        text-align: center;
     }
 
     .custom-table tbody tr:hover {
-        background-color: #eaf6ff;
-        transition: 0.3s;
-    }
-
-    .badge {
-        padding: 4px 10px;
-        border-radius: 20px;
-        font-size: 12px;
-        color: white;
-        font-weight: 500;
-    }
-
-    .badge-available {
-        background-color: #22c55e;
-    }
-
-    .badge-limited {
-        background-color: #eab308;
-    }
-
-    .badge-empty {
-        background-color: #ef4444;
-    }
-
-    .cover-img {
-        width: 50px;
-        height: auto;
-        border-radius: 5px;
+        background-color: rgb(134, 198, 247);
+        transition: 0.2s;
     }
 
     .btn-icon {
-        background: none;
+        background-color: transparent;
         border: none;
         font-size: 16px;
-        color: #003366;
+        margin: 0 5px;
     }
 
-    .btn-icon:hover {
-        color: #007bff;
+    .btn-edit {
+        color: #fbbf24;
+    }
+
+    .btn-edit:hover {
+        color: #f59e0b;
+    }
+
+    .btn-delete {
+        color: #ef4444;
+    }
+
+    .btn-delete:hover {
+        color: #dc2626;
     }
 
     .search-bar {
         display: flex;
-        justify-content: flex-end;
-        margin-bottom: 20px;
+        align-items: center;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        padding: 4px 8px;
+        gap: 6px;
     }
 
     .search-bar input[type="text"] {
-        padding: 6px 12px;
-        border: 1px solid #ccc;
-        border-radius: 6px;
+        border: none;
+        outline: none;
+        padding: 6px;
+    }
+
+    .search-bar i {
+        color: #888;
     }
 
     .page-title {
@@ -114,6 +111,7 @@
         <a href="{{ route('anggota.create') }}" class="btn btn-primary">+ Tambah Anggota</a>
 
         <form action="{{ route('anggota.index') }}" method="GET" class="search-bar">
+            <i class="fas fa-search"></i>
             <input type="text" name="search" placeholder="Cari anggota..." value="{{ request('search') }}">
         </form>
     </div>
@@ -137,10 +135,10 @@
                         <td>{{ $item->email }}</td>
                         <td>{{ $item->created_at->format('d-m-Y') }}</td>
                         <td>
-                            <a href="#" class="btn-icon" title="Edit"><i class="fas fa-pen"></i></a>
-                            <form action="#" method="POST" style="display:inline;">
+                            <a href="#" class="btn-icon btn-edit" title="Edit"><i class="fas fa-pen"></i></a>
+                            <form action="#" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus anggota ini?');">
                                 @csrf @method('DELETE')
-                                <button class="btn-icon" title="Hapus"><i class="fas fa-trash"></i></button>
+                                <button class="btn-icon btn-delete" title="Hapus"><i class="fas fa-trash"></i></button>
                             </form>
                         </td>
                     </tr>

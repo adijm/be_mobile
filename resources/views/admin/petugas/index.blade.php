@@ -5,11 +5,13 @@
 @section('content')
 <style>
     .table-container {
-        background-color: #ffffff;
+        background-color: rgba(227, 244, 250, 0.7);
         border-radius: 16px;
         padding: 20px;
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
         overflow-x: auto;
+        overflow-y: scroll;
+        max-height: 550px;
     }
 
     .custom-table {
@@ -20,18 +22,18 @@
     }
 
     .custom-table thead th {
-        background-color: #f1f5f9;
-        padding: 12px 16px;
-        text-align: left;
+        background-color: rgb(176, 210, 244);
+        padding: 12px;
+        text-align: center;
         font-weight: bold;
-        font-size: 14px;
-        color: #003366;
+        font-size: 15px;
+        color: rgb(9, 99, 189);
     }
 
     .custom-table tbody tr {
-        background: #f9fcff;
+        background-color: rgb(248, 251, 255);
         border-radius: 10px;
-        box-shadow: 0 2px 8px rgba(0, 123, 255, 0.08);
+        box-shadow: 0 2px 6px rgba(0, 123, 255, 0.1);
     }
 
     .custom-table tbody td {
@@ -39,22 +41,36 @@
         font-size: 14px;
         color: #333;
         vertical-align: middle;
+        text-align: center;
     }
 
     .custom-table tbody tr:hover {
-        background-color: #eaf6ff;
-        transition: 0.3s;
+        background-color: rgb(134, 198, 247);
+        transition: 0.2s;
     }
 
     .btn-icon {
-        background: none;
+        background-color: transparent;
         border: none;
         font-size: 16px;
-        color: #003366;
+        margin: 0 5px;
+        cursor: pointer;
     }
 
-    .btn-icon:hover {
-        color: #007bff;
+    .btn-edit {
+        color: #fbbf24;
+    }
+
+    .btn-edit:hover {
+        color: #f59e0b;
+    }
+
+    .btn-delete {
+        color: #ef4444;
+    }
+
+    .btn-delete:hover {
+        color: #dc2626;
     }
 
     .page-title {
@@ -103,13 +119,13 @@
                     <td>{{ $item->email }}</td>
                     <td>{{ $item->created_at ? $item->created_at->format('d-m-Y') : '-' }}</td>
                     <td>
-                        <a href="{{ route('petugas.edit', $item->id) }}" class="btn-icon" title="Edit">
+                        <a href="{{ route('petugas.edit', $item->id) }}" class="btn-icon btn-edit" title="Edit">
                             <i class="fas fa-pen"></i>
                         </a>
                         <form action="{{ route('petugas.destroy', $item->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus?');">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn-icon" title="Hapus">
+                            <button type="submit" class="btn-icon btn-delete" title="Hapus">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </form>
