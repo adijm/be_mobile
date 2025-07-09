@@ -4,8 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
-class buku extends Model
+class Buku extends Model
 {
     use HasFactory;
     protected $guarded = [];
@@ -27,4 +28,9 @@ class buku extends Model
         'category_id',
         'cover_image', 
     ];
+    protected $appends = ['cover_url'];
+    public function getCoverUrlAttribute()
+    {
+        return asset('storage/' . ltrim($this->cover_image, '/'));
+    }
 }

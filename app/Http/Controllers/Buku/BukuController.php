@@ -10,27 +10,17 @@ use Illuminate\Support\Facades\Storage;
 
 class BukuController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $books = Buku::with('category')->paginate(10);
-        $books->getCollection()->transform(function ($book) {
-            $book->cover_image = $book->cover_image 
-                ? asset('storage/cover_buku/' . $book->cover_image) 
-                : null;
-            return $book;
-        });
+        $books->getCollection()->each->append('cover_url');
+
         return response()->json([
             'status' => 'success',
             'data' => $books
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -52,24 +42,20 @@ class BukuController extends Controller
             ], 422);
         }
 
-        $book = new Buku();
-        $book->title = $request->title;
-        $book->author = $request->author;
-        $book->publisher = $request->publisher;
-        $book->isbn = $request->isbn;
-        $book->publication_year = $request->publication_year;
-        $book->stock = $request->stock;
-        $book->description = $request->description;
-        $book->category_id = $request->category_id;
+        $book = new Buku($request->only([
+            'title', 'author', 'publisher', 'isbn', 'publication_year',
+            'stock', 'description', 'category_id'
+        ]));
 
         if ($request->hasFile('cover_image')) {
             $image = $request->file('cover_image');
             $filename = time() . '.' . $image->getClientOriginalExtension();
-            $path = $image->storeAs('public/cover_buku', $filename);
+            $image->storeAs('public/cover_buku', $filename);
             $book->cover_image = $filename;
         }
 
         $book->save();
+        $book->append('cover_url');
 
         return response()->json([
             'status' => 'success',
@@ -78,22 +64,17 @@ class BukuController extends Controller
         ], 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Buku $book)
     {
         $book->load('category');
-        $book->cover_url = $book->cover_image ? asset('storage/cover_buku/' . $book->cover_image) : null;
+        $book->append('cover_url');
+
         return response()->json([
             'status' => 'success',
             'data' => $book
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Buku $book)
     {
         $validator = Validator::make($request->all(), [
@@ -115,27 +96,23 @@ class BukuController extends Controller
             ], 422);
         }
 
-        if ($request->has('title')) $book->title = $request->title;
-        if ($request->has('author')) $book->author = $request->author;
-        if ($request->has('publisher')) $book->publisher = $request->publisher;
-        if ($request->has('isbn')) $book->isbn = $request->isbn;
-        if ($request->has('publication_year')) $book->publication_year = $request->publication_year;
-        if ($request->has('stock')) $book->stock = $request->stock;
-        if ($request->has('description')) $book->description = $request->description;
-        if ($request->has('category_id')) $book->category_id = $request->category_id;
+        $book->fill($request->only([
+            'title', 'author', 'publisher', 'isbn',
+            'publication_year', 'stock', 'description', 'category_id'
+        ]));
 
         if ($request->hasFile('cover_image')) {
-            // Delete old image if exists
             if ($book->cover_image) {
                 Storage::delete('public/cover_buku/' . $book->cover_image);
             }
             $image = $request->file('cover_image');
             $filename = time() . '.' . $image->getClientOriginalExtension();
-            $path = $image->storeAs('public/cover_buku', $filename);
+            $image->storeAs('public/cover_buku', $filename);
             $book->cover_image = $filename;
         }
 
         $book->save();
+        $book->append('cover_url');
 
         return response()->json([
             'status' => 'success',
@@ -144,16 +121,12 @@ class BukuController extends Controller
         ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Buku $book)
     {
-        // Delete cover image if exists
         if ($book->cover_image) {
             Storage::delete('public/cover_buku/' . $book->cover_image);
         }
-        
+
         $book->delete();
 
         return response()->json([
@@ -162,39 +135,49 @@ class BukuController extends Controller
         ]);
     }
 
-    //ambil buku terbaru
-    public function bukuTerbaru() {
-        $buku = Buku::orderBy('created_at','asc')->take(4)->get();
+    public function bukuTerbaru()
+{
+    $buku = Buku::orderBy('created_at', 'desc')->take(4)->get();
 
-        $buku->transform(function ($buku) {
-            $buku->cover = $buku->cover_image;
-            $buku->cover_url = $buku->cover_image? url('storage/cover_buku/'.ltrim($buku->cover_image,'/')):null;
-            return $buku;
-        });
+    $buku->transform(function ($item) {
+        return [
+            'id' => $item->id,
+            'title' => $item->title,
+            'author' => $item->author,
+            'publisher' => $item->publisher,
+            'isbn' => $item->isbn,
+            'publication_year' => $item->publication_year,
+            'stock' => $item->stock,
+            'description' => $item->description,
+            'category_id' => $item->category_id,
+            'cover_image' => $item->cover_image,
+            'cover_url' => $item->cover_url, // akses accessor
+            'created_at' => $item->created_at,
+            'updated_at' => $item->updated_at,
+        ];
+    });
+
+    return response()->json([
+        'status' => 'success',
+        'data' => $buku
+    ]);
+}
+
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+
+        $buku = Buku::where('title', 'like', "%{$query}%")
+            ->orWhere('author', 'like', "%{$query}%")
+            ->orWhere('isbn', 'like', "%{$query}%")
+            ->with('category')
+            ->paginate(10);
+
+        $buku->getCollection()->each->append('cover_url');
 
         return response()->json([
-            'status'=>'success',
-            'data'=> $buku
+            'status' => 'success',
+            'data' => $buku
         ]);
     }
-
-    // untuk pencarian
-    public function search(Request $request) {
-        $query = $request->input('query'); //untuk membuat variabel query(inputan user)
-
-        $buku = Buku::where('title', 'like', "%{$query}%")->orWhere('author', 'like', "%{$query}%")->orWhere('isbn','like',"%{$query}%")->with('category')->paginate(10); //paginate (untuk menampilkan maksimal 10)
-        $buku->getCollection()->transform(function ($buku) {
-            $buku->cover = $buku->cover_image;
-            $buku->cover_url = $buku->cover_image? url('storage/cover_buku/'.ltrim($buku->cover_image,'/')):null;
-            return $buku;
-        });
-
-            return response()->json([
-                'status' => 'success',
-                'data' => $buku
-            ]);
-    }
-
-
-
 }
